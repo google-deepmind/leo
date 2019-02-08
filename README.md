@@ -4,7 +4,7 @@
 This repository contains the implementation of the meta-learning model
 described in the paper "[Meta-Learning with Latent Embedding
 Optimization](https://arxiv.org/abs/1807.05960)" by Rusu et. al. It was posted
-on arXiv in July 2018 and will be presented at ILCR 2019.
+on arXiv in July 2018 and will be presented at ICLR 2019.
 
 The paper learns a data-dependent latent representation of model parameters and
 performs gradient-based meta-learning in this low-dimensional space.
@@ -24,7 +24,13 @@ To run the code, you first need to need to install:
 - [Abseil](https://github.com/abseil/abseil-py) (we use only the FLAGS module).
 
 ### Getting the data
-You need to download the embeddings from TODO and save them on disk.
+You need to download [the embeddings](http://storage.googleapis.com/leo-embeddings/embeddings.zip) and extract them on disk:
+
+```
+$ wget http://storage.googleapis.com/leo-embeddings/embeddings.zip
+$ unzip embeddings.zip
+$ EMBEDDINGS=`pwd`/embeddings
+```
 
 ### Running the code
 Then, clone this repository using:
