@@ -48,7 +48,7 @@ To train the model on the tieredImageNet dataset or with a different number of
 training examples per class (K-shot), you can pass these parameters with
 command-line or in `config.py`, e.g.:
 
-`$ python runner.py -- --data_path=$EMBEDDINGS --dataset_name=tieredImageNet
+`$ python runner.py --data_path=$EMBEDDINGS --dataset_name=tieredImageNet
 --num_tr_examples_per_class=5 --outer_lr=1e-4`
 
 See `config.py` for the list of options to set.
