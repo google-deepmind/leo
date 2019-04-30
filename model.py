@@ -23,6 +23,8 @@ from __future__ import division
 from __future__ import print_function
 
 import numpy as np
+from six.moves import range
+from six.moves import zip
 import sonnet as snt
 import tensorflow as tf
 import tensorflow_probability as tfp
@@ -133,7 +135,7 @@ class LEO(snt.AbstractModule):
           initializer=tf.constant_initializer(self._inner_lr_init))
     starting_latents = latents
     loss, _ = self.forward_decoder(data, latents)
-    for _ in xrange(self._inner_unroll_length):
+    for _ in range(self._inner_unroll_length):
       loss_grad = tf.gradients(loss, latents)  # dLtrain/dz
       latents -= inner_lr * loss_grad[0]
       loss, classifier_weights = self.forward_decoder(data, latents)
@@ -155,7 +157,7 @@ class LEO(snt.AbstractModule):
           "lr", [1, 1, self.embedding_dim],
           dtype=self._float_dtype,
           initializer=tf.constant_initializer(self._finetuning_lr_init))
-    for _ in xrange(self._finetuning_unroll_length):
+    for _ in range(self._finetuning_unroll_length):
       loss_grad = tf.gradients(tr_loss, classifier_weights)
       classifier_weights -= finetuning_lr * loss_grad[0]
       tr_loss, _ = self.calculate_inner_loss(data.tr_input, data.tr_output,

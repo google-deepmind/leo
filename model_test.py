@@ -22,6 +22,7 @@ import functools
 from absl.testing import parameterized
 import mock
 import numpy as np
+from six.moves import zip
 import sonnet as snt
 import tensorflow as tf
 

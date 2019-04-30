@@ -25,6 +25,7 @@ import random
 
 import enum
 import numpy as np
+import six
 import tensorflow as tf
 
 
@@ -88,11 +89,11 @@ class DataProvider(object):
 
   def _load_data(self):
     """Loads data into memory and caches ."""
-    raw_data = pickle.load(tf.gfile.Open(
-        self._get_full_pickle_path(self._dataset_split), "rb"))
+    raw_data = self._load(
+        tf.gfile.Open(self._get_full_pickle_path(self._dataset_split), "rb"))
     if self._dataset_split == MetaSplit.TRAIN and self._config["train_on_val"]:
-      valid_data = pickle.load(tf.gfile.Open(
-          self._get_full_pickle_path(MetaSplit.VALID), "rb"))
+      valid_data = self._load(
+          tf.gfile.Open(self._get_full_pickle_path(MetaSplit.VALID), "rb"))
       for key in valid_data:
         if self._verbose:
           tf.logging.info(str([key, raw_data[key].shape]))
@@ -102,9 +103,17 @@ class DataProvider(object):
           tf.logging.info(str([key, raw_data[key].shape]))
 
     if self._verbose:
-      tf.logging.info(str([(k, np.shape(v)) for k, v in raw_data.iteritems()]))
+      tf.logging.info(
+          str([(k, np.shape(v)) for k, v in six.iteritems(raw_data)]))
 
     return raw_data
+
+  def _load(self, opened_file):
+    if six.PY2:
+      result = pickle.load(opened_file)
+    else:
+      result = pickle.load(opened_file, encoding="latin1")  # pylint: disable=unexpected-keyword-arg
+    return result
 
   def _index_data(self, raw_data):
     """Builds an index of images embeddings by class."""
@@ -121,8 +130,9 @@ class DataProvider(object):
 
     self._check_data_index(raw_data)
 
-    self._all_class_images = collections.OrderedDict(
-        [(k, np.array(v)) for k, v in self._all_class_images.iteritems()])
+    self._all_class_images = collections.OrderedDict([
+        (k, np.array(v)) for k, v in six.iteritems(self._all_class_images)
+    ])
     if self._verbose:
       tf.logging.info(str([len(raw_data), len(self._all_class_images),
                            len(self._image_embedding)]))
@@ -135,7 +145,7 @@ class DataProvider(object):
     error_message = "{} != {}".format(raw_data["embeddings"].shape[0], n)
     assert raw_data["embeddings"].shape[0] == n, error_message
 
-    all_class_folders = self._all_class_images.keys()
+    all_class_folders = list(self._all_class_images.keys())
     error_message = "no duplicate class names"
     assert len(set(all_class_folders)) == len(all_class_folders), error_message
     image_counts = set([len(class_images)
@@ -176,7 +186,7 @@ class DataProvider(object):
 
     def _build_one_instance_py():
       """Builds a random problem instance using data from specified classes."""
-      class_list = self._all_class_images.keys()
+      class_list = list(self._all_class_images.keys())
       sample_count = (tr_size + val_size)
       shuffled_folders = class_list[:]
       random.shuffle(shuffled_folders)

@@ -23,6 +23,7 @@ import os
 import pickle
 
 from absl import flags
+from six.moves import zip
 import tensorflow as tf
 
 import config
@@ -127,7 +128,7 @@ def construct_graph(outer_model_config):
       learning_rate=outer_model_config["outer_lr"])
   global_step = tf.train.get_or_create_global_step()
   train_op = optimizer.apply_gradients(
-      zip(metatrain_gradients, metatrain_variables), global_step)
+      list(zip(metatrain_gradients, metatrain_variables)), global_step)
 
   data_config = config.get_data_config()
   tf.logging.info("data_config: {}".format(data_config))

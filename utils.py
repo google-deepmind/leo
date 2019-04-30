@@ -21,6 +21,7 @@ from __future__ import print_function
 import os
 import pickle
 
+from six.moves import range
 import tensorflow as tf
 
 import config
@@ -103,6 +104,6 @@ def _is_previous_accuracy_better(best_checkpoint_path, accuracy):
 
 
 def evaluate_and_average(session, tensor, num_estimates):
-  tensor_value_estimates = [session.run(tensor) for _ in xrange(num_estimates)]
+  tensor_value_estimates = [session.run(tensor) for _ in range(num_estimates)]
   average_tensor_value = sum(tensor_value_estimates) / num_estimates
   return average_tensor_value

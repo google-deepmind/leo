@@ -19,8 +19,8 @@ Disclaimer: This is not an official Google product.
 ### Setup
 To run the code, you first need to need to install:
 
-- [TensorFlow](https://www.tensorflow.org/install/),
-- [Sonnet](https://github.com/deepmind/sonnet), and
+- [TensorFlow](https://www.tensorflow.org/install/) and [TensorFlow Probability](https://www.tensorflow.org/probability) (we used version 1.12),
+- [Sonnet](https://github.com/deepmind/sonnet) (we used version v1.29), and
 - [Abseil](https://github.com/abseil/abseil-py) (we use only the FLAGS module).
 
 ### Getting the data
@@ -39,7 +39,7 @@ Then, clone this repository using:
 
 and run the code as:
 
-`$ python runner.py -- --data_path=$EMBEDDINGS`
+`$ python runner.py --data_path=$EMBEDDINGS`
 
 This will train the model for solving 5-way 1-shot miniImageNet classification.
 
